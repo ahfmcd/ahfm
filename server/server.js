@@ -8,6 +8,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../static/index.html'));
 });
 
+app.get('/blog', (req, res) => {
+    res.sendFile(path.join(__dirname, '../static/blog.html'));
+});
+
 app.listen(port, () => {
    console.log(`app listening on port ${port}`);
 });
