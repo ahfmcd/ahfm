@@ -1,10 +1,15 @@
 const express = require ('express');
-const path = require('path');
 const mongoose = require('mongoose');
+const bodyparser = require('body-parser');
+
+const path = require('path');
+
 
 mongoose.connect('mongodb://localhost:27017/blogdb');
 
 const app = express();
+app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({extended: true}));
 const port = 8080;
 
 var blogpost = mongoose.model('blogpost', {
@@ -38,6 +43,10 @@ app.get('/', (req, res) => {
 
 app.get('/blog', (req, res) => {
     res.sendFile(path.join(__dirname, '../static/blog.html'));
+});
+
+app.post('/addpost', (req, res) => {
+
 });
 
 app.listen(port, () => {
