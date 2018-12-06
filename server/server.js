@@ -26,17 +26,6 @@ var blogpost = mongoose.model('blogpost', {
     }
 });
 
-var newblogpost = new blogpost({
-    text: "first post in this blog and database",
-    email: "arashfiroozi32@gmail.com"
-});
-
-newblogpost.save().then((doc)=> {
-    console.log('creating model success', doc);
-}, (e) => {
-    console.log('unable to save data');
-});
-
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../static/index.html'));
 });
@@ -46,7 +35,13 @@ app.get('/blog', (req, res) => {
 });
 
 app.post('/addpost', (req, res) => {
+    var postdata = new blogpost(req.body);
 
+    postdata.save().then(item => {
+        res.send("saved post to database");
+    }).catch(err => {
+       res.status(400).send("unable to save the post");
+    });
 });
 
 app.listen(port, () => {
