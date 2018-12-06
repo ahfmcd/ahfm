@@ -15,19 +15,56 @@ const port = 8080;
 var blogpost = mongoose.model('blogpost', {
     text: {
      type: String,
-        required: true
+        required: true,
+        unique: true
     },
     email:{
         type: String,
         required: true
     },
     postedat:{
-        type: Number
+        type: Number,
+        unique: true
+    }
+});
+
+var user = mongoose.model('user', {
+   email: {
+        type: String,
+       required: true,
+       unique: true,
+       trim: true
+   },
+    username: {
+       type: String,
+        required: true,
+        unique: true,
+        trim: true
+    },
+    password: {
+       type: String,
+        required: true,
     }
 });
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../static/index.html'));
+});
+
+app.get('/signup', (req, res) => {
+   res.sendFile(path.join(__dirname, '../static/signup.html'));
+});
+
+app.post('/signedup', (req, res) => {
+
+});
+
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, '../static/login.html'))
+});
+
+app.post('/logedin', (req,res) => {
+
 });
 
 app.get('/blog', (req, res) => {
