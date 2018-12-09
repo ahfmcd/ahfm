@@ -11,6 +11,8 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
-    "mongoose": "^5.3.14"
+    "lodash": "^4.17.11",
+    "mongoose": "^5.3.14",
+    "validator": "^10.9.0"
   }
 }

@@ -1,6 +1,8 @@
 const express = require ('express');
 const mongoose = require('mongoose');
 const bodyparser = require('body-parser');
+const validator = require('validator');
+const _ = require('lodash');
 
 const path = require('path');
 
@@ -28,12 +30,19 @@ var blogpost = mongoose.model('blogpost', {
     }
 });
 
-var user = mongoose.model('user', {
+var User = mongoose.model('user', {
    email: {
         type: String,
        required: true,
        unique: true,
-       trim: true
+       trim: true,
+       minLength:1,
+       validate: {
+            validator: (v) => {
+                return validator.isEmail(v);
+            },
+           message: '{VALUE} is not a valid email'
+       }
    },
     username: {
        type: String,
@@ -44,6 +53,7 @@ var user = mongoose.model('user', {
     password: {
        type: String,
         required: true,
+        minLength: 6,
     }
 });
 
@@ -56,7 +66,14 @@ app.get('/signup', (req, res) => {
 });
 
 app.post('/signedup', (req, res) => {
+    var user = _.pick(req.body,['email','username','password']);
 
+    var userdata = new User(user);
+    userdata.save().then((item) => {
+        res.send(item);
+    }).catch((e) => {
+        res.status(400).send(e);
+    })
 });
 
 app.get('/login', (req, res) => {
@@ -75,9 +92,9 @@ app.post('/addpost', (req, res) => {
     var postdata = new blogpost(req.body);
 
     postdata.save().then(item => {
-        res.send("saved post to database");
+        res.send(`${item} saved post to database`);
     }).catch(err => {
-       res.status(400).send("unable to save the post");
+       res.status(400).send(`${err} unable to save the post`);
     });
 });
 
