@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyparser = require('body-parser');
 const validator = require('validator');
 const _ = require('lodash');
+const bcrypt = require("bcryptjs");
 
 const path = require('path');
 
@@ -68,12 +69,19 @@ app.get('/signup', (req, res) => {
 app.post('/signedup', (req, res) => {
     var user = _.pick(req.body,['email','username','password']);
 
-    var userdata = new User(user);
-    userdata.save().then((item) => {
-        res.send(item);
-    }).catch((e) => {
-        res.status(400).send(e);
-    })
+    bcrypt.hash(user.password, 10 ,(err, hash) => {
+        user.password = hash;
+
+        var userdata = new User(user);
+
+        userdata.save().then((item) => {
+            res.send(item);
+        }).catch((e) => {
+            res.status(400).send(e);
+        });
+    });
+
+
 });
 
 app.get('/login', (req, res) => {
