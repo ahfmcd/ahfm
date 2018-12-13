@@ -89,7 +89,25 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/logedin', (req,res) => {
-
+    const {email , password} = req.body;
+    User.findOne({email},(err, user) => {
+        if(user){
+            bcrypt.compare(password, user.password, (err, same) => {
+                if (same){
+                    res.redirect('/blog');
+                }
+                if (err) {
+                    res.redirect('/login');
+                }
+            });
+        }if (err) {
+            return res.redirect('/login');
+        }
+    });
+    // Load hash from your password DB.
+    // bcrypt.compare(myPlaintextPassword, hash, function(err, res) {
+    //     res == true
+    // });
 });
 
 app.get('/blog', (req, res) => {
